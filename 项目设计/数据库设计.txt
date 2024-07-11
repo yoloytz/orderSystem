@@ -1,0 +1,157 @@
+表间关系和表内字段描述
+1. 用户表 (Users)
+CREATE TABLE Users (
+    UserID INT PRIMARY KEY AUTO_INCREMENT,
+    Username VARCHAR(50) NOT NULL UNIQUE,
+    Password VARCHAR(255) NOT NULL,
+    Phone VARCHAR(20),
+    Address VARCHAR(255),
+);
+字段：
+
+UserID：用户唯一标识符，主键，自动递增。
+Username：用户名，唯一，不为空。
+Password：用户密码，存储为加密格式，不为空。
+Phone：用户电话号码。
+Address：用户地址。
+关系：
+
+一个用户可以拥有多个订单（与订单表关联）。
+
+2. 商家登录账号表 (Merchants)
+CREATE TABLE Merchants (
+    MerchantID INT PRIMARY KEY AUTO_INCREMENT,
+    MerchantName VARCHAR(50) NOT NULL UNIQUE,
+    Password VARCHAR(255) NOT NULL,
+    Email VARCHAR(100) NOT NULL UNIQUE,
+    Phone VARCHAR(20),
+    Address VARCHAR(255),
+);
+
+字段：
+
+MerchantID：商家唯一标识符，主键，自动递增。
+MerchantName：商家名称，唯一，不为空。
+Password：商家密码，存储为加密格式，不为空。
+Email：商家邮箱，唯一，不为空。
+Phone：商家电话号码。
+Address：商家地址。
+关系：
+
+一个商家可以发布多个菜品（与菜品表关联）。
+一个商家可以接收多个订单（与订单表关联）。
+
+3. 系统管理员表 (Admins)
+CREATE TABLE Admins (
+    AdminID INT PRIMARY KEY AUTO_INCREMENT,
+    Username VARCHAR(50) NOT NULL UNIQUE,
+    Password VARCHAR(255) NOT NULL,
+    Email VARCHAR(100) NOT NULL UNIQUE,
+);
+
+字段：
+
+AdminID：管理员唯一标识符，主键，自动递增。
+Username：管理员用户名，唯一，不为空。
+Password：管理员密码，存储为加密格式，不为空。
+Email：管理员邮箱，唯一，不为空。
+
+
+主要用于管理用户和商家账号，无直接的业务关系。
+4. 菜品表 (Dishes)
+CREATE TABLE Dishes (
+    DishID INT PRIMARY KEY AUTO_INCREMENT,
+    MerchantID INT,
+    DishName VARCHAR(100) NOT NULL,
+    Description TEXT,
+    Price DECIMAL(10, 2) NOT NULL,
+    ImageURL VARCHAR(255),
+    FOREIGN KEY (MerchantID) REFERENCES Merchants(MerchantID)
+);
+
+字段：
+
+DishID：菜品唯一标识符，主键，自动递增。
+MerchantID：商家唯一标识符，外键，关联到商家表。
+DishName：菜品名称，不为空。
+Description：菜品描述。
+Price：菜品价格，不为空。
+ImageURL：菜品图片URL。
+
+关系：
+
+一个菜品由一个商家发布（与商家表关联）。
+一个菜品可以出现在多个订单中（与订单详情表关联）。
+5. 订单表 (Orders)
+CREATE TABLE Orders (
+    OrderID INT PRIMARY KEY AUTO_INCREMENT,
+    UserID INT,
+    MerchantID INT,
+    Status ENUM('已下单', '已接单', '配送中', '已完成', '已评价') NOT NULL,
+    TotalPrice DECIMAL(10, 2) NOT NULL,
+    CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (UserID) REFERENCES Users(UserID),
+    FOREIGN KEY (MerchantID) REFERENCES Merchants(MerchantID)
+);
+
+字段：
+
+OrderID：订单唯一标识符，主键，自动递增。
+UserID：用户唯一标识符，外键，关联到用户表。
+MerchantID：商家唯一标识符，外键，关联到商家表。
+Status：订单状态（已下单、已接单、配送中、已完成、已评价），不为空。
+TotalPrice：订单总价，不为空。
+CreatedAt：订单创建时间，默认为当前时间戳。
+关系：
+
+一个订单由一个用户创建（与用户表关联）。
+一个订单由一个商家处理（与商家表关联）。
+一个订单可以包含多个菜品（与订单详情表关联）。
+一个订单可以有一个评价（与评价表关联）。
+6. 订单详情表 (OrderDetails)
+CREATE TABLE OrderDetails (
+    OrderDetailID INT PRIMARY KEY AUTO_INCREMENT,
+    OrderID INT,
+    DishID INT,
+    Quantity INT NOT NULL,
+    Price DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (OrderID) REFERENCES Orders(OrderID),
+    FOREIGN KEY (DishID) REFERENCES Dishes(DishID)
+);
+
+字段：
+
+OrderDetailID：订单详情唯一标识符，主键，自动递增。
+OrderID：订单唯一标识符，外键，关联到订单表。
+DishID：菜品唯一标识符，外键，关联到菜品表。
+Quantity：菜品数量，不为空。
+Price：菜品价格，不为空。
+关系：
+
+一个订单详情属于一个订单（与订单表关联）。
+一个订单详情涉及一个菜品（与菜品表关联）。
+7. 评价表 (Reviews)
+CREATE TABLE Reviews (
+    ReviewID INT PRIMARY KEY AUTO_INCREMENT,
+    OrderID INT,
+    UserID INT,
+    Rating INT CHECK (Rating >= 1 AND Rating <= 5),
+    Comment TEXT,
+    CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (OrderID) REFERENCES Orders(OrderID),
+    FOREIGN KEY (UserID) REFERENCES Users(UserID)
+);
+
+字段：
+
+ReviewID：评价唯一标识符，主键，自动递增。
+OrderID：订单唯一标识符，外键，关联到订单表。
+UserID：用户唯一标识符，外键，关联到用户表。
+Rating：评价评分（1到5星），不为空。
+Comment：评价内容。
+CreatedAt：评价时间，默认为当前时间戳。
+关系：
+
+一个评价属于一个订单（与订单表关联）。
+一个评价由一个用户创建（与用户表关联）。
+
