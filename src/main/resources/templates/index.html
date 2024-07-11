@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/css/animate.css}">
+    <link rel="stylesheet" th:href="@{/asserts/bootstrap-3.3.7-dist/css/bootstrap.css}">
+    <script th:src="@{/js/jquery-3.3.1.js}"></script>
+    <script th:src="@{/asserts/bootstrap-3.3.7-dist/js/bootstrap.js}"></script>
+  <style>
+    body {
+      background: url("/images/indeximg.jpg") no-repeat center center fixed;
+      background-size: cover;
+    }
+    .container {
+      margin-top: 10%;
+    }
+  </style>
+    <title>测试页面</title>
+</head>
+<body>
+<div class="container text-center">
+  <h1 class="animated fadeInDown">欢迎来到《名字待定的》餐厅</h1>
+  <form th:action="@{/User/login}" method="post" class="form-signin">
+      <label>
+          <input type="text" name="username" class="form-control" placeholder="用户名" required autofocus>
+      </label>
+      <label>
+          <input type="password" name="password" class="form-control" placeholder="密码" required>
+      </label>
+      <button class="btn btn-lg btn-primary btn-block" type="submit" >立即登录</button>
+<!--      <div class="row">-->
+<!--          <div class="form-group col-md-4 offset-md-4">-->
+<!--              <label for="inputUsername">账号：</label>-->
+<!--              <input type="text" id="inputUsername" name="username" class="form-control" placeholder="用户名" required autofocus>-->
+<!--          </div>-->
+<!--          <div class="form-group col-md-4 offset-md-4">-->
+<!--              <label for="inputPassword">密码：</label>-->
+<!--              <input type="password" id="inputPassword" name="password" class="form-control" placeholder="密码" required>-->
+<!--          </div>-->
+<!--      </div>-->
+<!--      <div class="row">-->
+<!--          <div class="form-group col-md-4">-->
+<!--              <button class="btn btn-lg btn-primary btn-block" type="submit">立即登录</button>-->
+<!--          </div>-->
+<!--          <button class="btn btn-info " th:onclick="location.href ='@{/register}'">用户注册</button>-->
+<!--      </div>-->
+<!--  </form>-->
+
+
+  <button class="btn btn-info" th:onclick="location.href ='@{/register}'">用户注册</button>
+  <button class="btn btn-warning" th:onclick="location.href ='@{/adminLogin}'">管理员登录</button>
+  <button class="btn btn-success" th:onclick="location.href ='@{/merchantLogin}'">商家登录</button>
+</div>
+</body>
+</html>

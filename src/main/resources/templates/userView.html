@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" th:href="@{/css/animate.css}">
+  <link rel="stylesheet" th:href="@{/asserts/bootstrap-3.3.7-dist/css/bootstrap.css}">
+  <script th:src="@{/js/jquery-3.3.1.js}"></script>
+  <script th:src="@{/asserts/bootstrap-3.3.7-dist/js/bootstrap.js}"></script>
+  <title>用户界面</title>
+<!--  <style>-->
+<!--    body {-->
+<!--      background: url("/images/indeximg.jpg") no-repeat center center fixed;-->
+<!--      background-size: cover;-->
+<!--    }-->
+<!--    .container {-->
+<!--      margin-top: 10%;-->
+<!--    }-->
+<!--  </style>-->
+</head>
+<body>
+<div class="container-fluid">
+  <h2 class="text-center">欢迎, <span th:text="${session.user.username}">用户</span></h2>
+  <div class="row">
+    <div class="col-md-2 col-md-offset-1">
+      <h1>登录成功</h1>
+      <h3>个人信息</h3>
+      <p>用户名: <span th:text="${session.user.username}"></span></p>
+      <p>电话: <span th:text="${session.user.phone}"></span></p>
+      <p>地址: <span th:text="${session.user.address}"></span></p>
+<!--      <button class="btn btn-info" th:onclick="location.href = '@{/updateUser}'">更改用户信息</button>-->
+    </div>
+    <div class="col-md-7 col-md-offset-1">
+      <h3>餐厅菜单</h3>
+      <form th:action="@{/order}" method="post">
+        <table class="table table-striped">
+          <thead>
+          <tr>
+            <th>选择</th>
+            <th>菜品名称</th>
+            <th>备注</th>
+            <th>价格</th>
+            <th>图片</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr th:each="dish : ${dishes}">
+            <td>
+              <input type="checkbox" th:value="${dish.dishID}" th:id="${dish.dishID}" name="dishIDs">
+            </td>
+            <td th:text="${dish.dishName}"></td>
+            <td th:text="${dish.getDescription()}"></td>
+            <td th:text="${dish.price} + '元'"></td>
+            <td>
+              <img th:src="${dish.imageUrl}" alt="Dish Image" class="img-thumbnail" style="width: 100px; height: 100px;">
+            </td>
+          </tr>
+          </tbody>
+        </table>
+        <button class="btn btn-success text-right" type="submit" style="float: right">立即下单</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid">
+  <div class="col-md-10 col-md-offset-1" style="margin-top: 100px;">
+    <h3>订单详情</h3>
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <th>订单号</th>
+        <th>订单时间</th>
+        <th>状态</th>
+        <th>总价</th>
+        <th>操作</th>
+        <th>查看详情</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="order : ${orders}">
+        <td th:text="${order.orderID}"></td>
+        <td th:text="${#dates.format(order.createdTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
+        <td th:if="${order.getStatus().toString() == 'completed'}">
+          <span th:text="已完成"></span>
+        </td>
+        <td th:if="${order.getStatus().toString() == 'placed'}">
+          <span th:text="已下单"></span>
+        </td>
+        <td th:if="${order.getStatus().toString() == 'taken'}">
+          <span th:text="已接单"></span>
+        </td>
+        <td th:if="${order.getStatus().toString() == 'delivery'}">
+          <span th:text="配送中"></span>
+        </td>
+        <td th:if="${order.getStatus().toString() == 'rated'}">
+          <span th:text="已评价"></span>
+        </td>
+        <td th:text="${order.totalPrice} + '元'"></td>
+        <td>
+          <div th:if="${order.getStatus().toString() == 'completed'}">
+            <button class="btn btn-primary" >立即评价</button>
+          </div>
+          <div th:if="${order.getStatus().toString() == 'placed'}">
+            <button class="btn btn-danger" >退单</button>
+          </div>
+          <div th:if="${order.getStatus().toString() == 'rated'}">
+            <button class="btn btn-danger" >感谢您的用餐！</button>
+          </div>
+<!--          th:onclick="location.href='@{/review/' + ${order.orderID}}'"-->
+<!--          th:onclick="location.href='@{/cancelOrder/' + ${order.orderID}}'"-->
+<!--          th:data-target="'#orderDetailModal' + ${order.orderID}"-->
+        </td>
+        <td>
+          <div>
+            <button class="btn btn-info" data-toggle="modal" th:data-target="'#orderDetailModal' + ${order.orderID}">查看详情</button>
+          </div>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+
+<!-- 订单详情模态框 -->
+<div th:each="order : ${orders}">
+  <div class="modal fade" th:id="'orderDetailModal' + ${order.orderID}" tabindex="-1" role="dialog" aria-labelledby="orderDetailLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" th:text="'订单详情 - 订单号: ' + ${order.orderID}"></h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>订单号: <span th:text="${order.orderID}"></span></p>
+          <p>状态: <span th:text="${order.status}"></span></p>
+          <p>总价: <span th:text="${order.totalPrice}"></span>元</p>
+          <table class="table table-striped">
+            <thead>
+            <tr>
+              <th>菜品名称</th>
+              <th>图像</th>
+              <th>备注</th>
+              <th>数量</th>
+              <th>单价</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="detail : ${order.orderDetails}">
+              <td th:text="${detail.dish.dishName}"></td>
+              <td>
+                <img th:src="${detail.dish.getImageUrl()}" alt="Dish Image" class="img-thumbnail" style="width: 50px; height: 50px;">
+              </td>
+              <td th:text="${detail.dish.getDescription()}"></td>
+              <td th:text="${detail.quantity}"></td>
+              <td th:text="${detail.price} + '元'"></td>
+            </tr>
+            </tbody>
+          </table>
+          <!-- 评论部分 -->
+          <div th:if="${order.review != null}">
+            <h4>评论</h4>
+            <p>评分: <span th:text="${order.review.rating}"></span></p>
+            <p>评论: <span th:text="${order.review.comment}"></span></p>
+          </div>
+          <div th:if="${order.review == null}">
+            <p>订单尚未评论</p>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

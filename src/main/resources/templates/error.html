@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/css/animate.css}">
+    <link rel="stylesheet" th:href="@{/asserts/bootstrap-3.3.7-dist/css/bootstrap.css}">
+    <script th:src="@{/js/jquery-3.3.1.js}"></script>
+    <script th:src="@{/asserts/bootstrap-3.3.7-dist/js/bootstrap.js}"></script>
+    <title>错误</title>
+</head>
+<body>
+<!-- 错误信息展示 -->
+<div class="container">
+  <div class="alert alert-danger" role="alert" th:text="${msg}"></div>
+  <!-- 操作按钮，例如“返回首页” -->
+  <button id="goHomeButton" class="btn btn-primary">返回首页</button>
+</div>
+
+<script>
+  var goHomeButton = document.getElementById('goHomeButton');
+  goHomeButton.addEventListener('click', function() {
+    window.location.href = '/';
+  });
+</script>
+</body>
+</html>
