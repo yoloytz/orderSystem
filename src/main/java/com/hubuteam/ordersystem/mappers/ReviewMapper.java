@@ -1,7 +1,9 @@
 package com.hubuteam.ordersystem.mappers;
 
 import com.hubuteam.ordersystem.pojo.Review;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 /**
@@ -20,4 +22,8 @@ public interface ReviewMapper {
      */
     @Select("SELECT * FROM ordersys.reviews WHERE OrderID = #{orderId}")
     Review selectReviewByOrderId(int orderId);
+
+
+
+    int insertReview(@Param("review") Review review);
 }

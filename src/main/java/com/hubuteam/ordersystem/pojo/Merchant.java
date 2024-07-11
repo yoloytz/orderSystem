@@ -25,7 +25,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Merchant {
-    private Long merchantID;
+    private Long merchantId;
     private String merchantName;
     private String password;
     private String email;

@@ -34,4 +34,32 @@ public interface OrderService {
      * @return 订单评价信息
      */
     Review reviewByOrderIdService(int orderId);
+
+    /**
+     * 根据订单id查询订单
+     * @param orderId 订单Id
+     * @return 订单信息
+     */
+    Order findOrderById(int orderId);
+
+    /**
+     * 保存评论
+     * @param review 评论信息
+     * @return 评论是否成功
+     */
+    int saveReview(Review review);
+
+    /**
+     * 更新订单状态
+     * @param orderId 订单id
+     * @return 订单状态是否成功
+     */
+    int updateStatusCompleted(int orderId);
+
+    /**
+     * 根据订单id删除订单
+     * @param orderId 订单id
+     * @return 订单是否删除成功
+     */
+    int deleteOrderById(int orderId);
 }

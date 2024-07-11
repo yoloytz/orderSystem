@@ -33,4 +33,29 @@ public class UserServiceImpl implements UserService {
             return null;
         }
     }
+
+    /**
+     * 修改用户密码
+     *
+     * @param userId      用户id
+     * @param newPassword 新密码
+     * @return
+     */
+    @Override
+    public int updatePassword(int userId, String newPassword) {
+        System.out.println("用户信息打印测试1" + userId + newPassword);
+        return userMapper.updateUserPassword(userId, newPassword);
+    }
+
+    /**
+     * 修改用户信息
+     *
+     * @param user 用户信息
+     * @return 修改用户信息
+     */
+    @Override
+    public int updateUser(User user) {
+        System.out.println("用户信息打印测试2" + user);
+        return userMapper.updateUserInfo(user);
+    }
 }

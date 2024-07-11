@@ -63,4 +63,44 @@ public class OrderServiceImpl implements OrderService {
     public Review reviewByOrderIdService(int orderId) {
         return reviewMapper.selectReviewByOrderId(orderId);
     }
+
+    /**
+     * 根据订单id查询订单
+     *
+     * @param orderId 订单Id
+     * @return 订单信息
+     */
+    @Override
+    public Order findOrderById(int orderId) {
+        return orderMapper.selectOrderById(orderId);
+    }
+
+    /**
+     * 保存评论
+     *
+     * @param review 评论信息
+     * @return 评论是否成功
+     */
+    @Override
+    public int saveReview(Review review) {
+        return reviewMapper.insertReview(review);
+    }
+
+    /**
+     * 更新订单状态
+     *
+     * @param orderId 订单id
+     * @return 订单状态是否成功
+     */
+    @Override
+    public int updateStatusCompleted(int orderId) {
+        return orderMapper.updateStatusCompleted(orderId);
+    }
+
+    @Override
+    public int deleteOrderById(int orderId) {
+        return orderMapper.deleteOrder(orderId);
+    }
+
+
 }

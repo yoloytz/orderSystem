@@ -25,7 +25,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Order {
-    private int orderID;
+    private int orderId;
     private User user;
     private Merchant merchant;
     private OrderStatus status;

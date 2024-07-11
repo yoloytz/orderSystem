@@ -19,19 +19,31 @@
 </head>
 <body>
 <div class="container-fluid">
-  <h2 class="text-center">欢迎, <span th:text="${session.user.username}">用户</span></h2>
+  <h2 class="text-center">欢迎, <span th:text="${session.user.username}">用户,今天想吃点什么呢？</span></h2>
   <div class="row">
     <div class="col-md-2 col-md-offset-1">
-      <h1>登录成功</h1>
+      <div class="alert alert-warning">
+        <strong>提示：</strong><span th:text="${msg}"></span>
+      </div>
       <h3>个人信息</h3>
       <p>用户名: <span th:text="${session.user.username}"></span></p>
       <p>电话: <span th:text="${session.user.phone}"></span></p>
       <p>地址: <span th:text="${session.user.address}"></span></p>
+      <div class="row" style="margin-top: 20px;">
+        <button class="btn btn-info" data-toggle="modal" data-target="#updateUserModal">更改信息</button>
+        <button class="btn btn-warning" data-toggle="modal" data-target="#updatePasswordModal">修改密码</button>
+      </div>
+
+      <div class="row" style="margin-top: 20px;">
+        <a th:href="@{/}">退出登录</a>
+      </div>
+
 <!--      <button class="btn btn-info" th:onclick="location.href = '@{/updateUser}'">更改用户信息</button>-->
     </div>
+
     <div class="col-md-7 col-md-offset-1">
       <h3>餐厅菜单</h3>
-      <form th:action="@{/order}" method="post">
+      <form th:action="@{/User/order}" method="post">
         <table class="table table-striped">
           <thead>
           <tr>
@@ -39,17 +51,30 @@
             <th>菜品名称</th>
             <th>备注</th>
             <th>价格</th>
+            <th>数量</th>
             <th>图片</th>
           </tr>
           </thead>
           <tbody>
           <tr th:each="dish : ${dishes}">
+<!--            <td>-->
+<!--              <input type="checkbox" th:value="${dish.dishId}" th:id="'dish_' + ${dish.dishId}" name="dishIds" onchange="toggleQuantityInput(${dish.dishId})">-->
+<!--            </td>-->
+
             <td>
-              <input type="checkbox" th:value="${dish.dishID}" th:id="${dish.dishID}" name="dishIDs">
+              <input type="checkbox" th:value="${dish.dishId}" th:id="|dish_${dish.dishId}|" name="dishIds" onclick="toggleQuantityInput(this)">
             </td>
+
             <td th:text="${dish.dishName}"></td>
-            <td th:text="${dish.getDescription()}"></td>
+            <td th:text="${dish.description}"></td>
             <td th:text="${dish.price} + '元'"></td>
+<!--            <td>-->
+<!--              <input type="number" th:id="'quantity_' + ${dish.dishId}" name="quantities" min="1" value="1" style="width: 60px; display: inline;">-->
+<!--            </td>-->
+
+            <td>
+              <input type="number" th:id="|quantity_${dish.dishId}|" name="quantities" min="1" value="1" style="width: 60px; display: none;">
+            </td>
             <td>
               <img th:src="${dish.imageUrl}" alt="Dish Image" class="img-thumbnail" style="width: 100px; height: 100px;">
             </td>
@@ -61,6 +86,7 @@
     </div>
   </div>
 </div>
+
 
 <div class="container-fluid">
   <div class="col-md-10 col-md-offset-1" style="margin-top: 100px;">
@@ -78,7 +104,7 @@
       </thead>
       <tbody>
       <tr th:each="order : ${orders}">
-        <td th:text="${order.orderID}"></td>
+        <td th:text="${order.orderId}"></td>
         <td th:text="${#dates.format(order.createdTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
         <td th:if="${order.getStatus().toString() == 'completed'}">
           <span th:text="已完成"></span>
@@ -98,13 +124,14 @@
         <td th:text="${order.totalPrice} + '元'"></td>
         <td>
           <div th:if="${order.getStatus().toString() == 'completed'}">
-            <button class="btn btn-primary" >立即评价</button>
+            <button class="btn btn-primary" data-toggle="modal" th:data-target="'#reviewModal' + ${order.orderId}">立即评价</button>
           </div>
           <div th:if="${order.getStatus().toString() == 'placed'}">
-            <button class="btn btn-danger" >退单</button>
+            <button class="btn btn-danger" data-toggle="modal" th:data-target="'#deleteModal' + ${order.orderId}">退单</button>
           </div>
+
           <div th:if="${order.getStatus().toString() == 'rated'}">
-            <button class="btn btn-danger" >感谢您的用餐！</button>
+            <button class="btn btn-primary disabled" >感谢您的用餐与评价！</button>
           </div>
 <!--          th:onclick="location.href='@{/review/' + ${order.orderID}}'"-->
 <!--          th:onclick="location.href='@{/cancelOrder/' + ${order.orderID}}'"-->
@@ -112,7 +139,7 @@
         </td>
         <td>
           <div>
-            <button class="btn btn-info" data-toggle="modal" th:data-target="'#orderDetailModal' + ${order.orderID}">查看详情</button>
+            <button class="btn btn-info" data-toggle="modal" th:data-target="'#orderDetailModal' + ${order.orderId}">查看详情</button>
           </div>
         </td>
       </tr>
@@ -124,17 +151,17 @@
 
 <!-- 订单详情模态框 -->
 <div th:each="order : ${orders}">
-  <div class="modal fade" th:id="'orderDetailModal' + ${order.orderID}" tabindex="-1" role="dialog" aria-labelledby="orderDetailLabel" aria-hidden="true">
+  <div class="modal fade" th:id="'orderDetailModal' + ${order.orderId}" tabindex="-1" role="dialog" aria-labelledby="orderDetailLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" th:text="'订单详情 - 订单号: ' + ${order.orderID}"></h5>
+          <h5 class="modal-title" th:text="'订单详情 - 订单号: ' + ${order.orderId}"></h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
         <div class="modal-body">
-          <p>订单号: <span th:text="${order.orderID}"></span></p>
+          <p>订单号: <span th:text="${order.orderId}"></span></p>
           <p>状态: <span th:text="${order.status}"></span></p>
           <p>总价: <span th:text="${order.totalPrice}"></span>元</p>
           <table class="table table-striped">
@@ -176,6 +203,150 @@
     </div>
   </div>
 </div>
+
+<div th:each="order : ${orders}">
+<div class="modal fade" th:id="'reviewModal' +${order.orderId}" tabindex="-1" role="dialog" aria-labelledby="reviewModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" th:text="'评价订单 - 订单号: ' + ${order.orderId}"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form th:action="@{/User/userPostReview}" method="post">
+        <div class="modal-body">
+          <input type="hidden" th:value="${order.orderId}" name="orderId">
+          <div class="form-group">
+            <label for="rating">评分:</label>
+            <select class="form-control" name="rating" id="rating">
+              <option value="1">1星</option>
+              <option value="2">2星</option>
+              <option value="3">3星</option>
+              <option value="4">4星</option>
+              <option value="5">5星</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="comment">评论:</label>
+            <textarea class="form-control" id="comment" name="comment" rows="3"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+          <button type="submit" class="btn btn-primary">提交评价</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- 退单模态框 -->
+<div th:each="order : ${orders}">
+<div class="modal fade" th:id="'deleteModal' + ${order.orderId}" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" th:text="'确认退单 - 订单号: ' + ${order.orderId}"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>您确认要退单吗？</p>
+      </div>
+      <div class="modal-footer">
+        <form th:action="@{/User/deleteOrder}" method="post">
+          <input type="hidden" th:value="${order.orderId}" name="orderId">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+          <button type="submit" class="btn btn-danger">是</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- 修改用户信息模态框 -->
+<div class="modal fade" id="updateUserModal" tabindex="-1" role="dialog" aria-labelledby="updateUserModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="updateUserModalLabel">更改用户信息</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form th:action="@{/User/updateUser}" method="post">
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="username">用户名:</label>
+            <input type="text" class="form-control" id="username" name="username" th:value="${session.user.username}">
+          </div>
+          <div class="form-group">
+            <label for="phone">电话:</label>
+            <input type="text" class="form-control" id="phone" name="phone" th:value="${session.user.phone}">
+          </div>
+          <div class="form-group">
+            <label for="address">地址:</label>
+            <input type="text" class="form-control" id="address" name="address" th:value="${session.user.address}">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+          <button type="submit" class="btn btn-primary">保存更改</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- 修改密码模态框 -->
+<div class="modal fade" id="updatePasswordModal" tabindex="-1" role="dialog" aria-labelledby="updatePasswordModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="updatePasswordModalLabel">修改密码</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form th:action="@{/User/updatePassword}" method="post">
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="oldPassword">旧密码:</label>
+            <input type="password" class="form-control" id="oldPassword" name="oldPassword">
+          </div>
+          <div class="form-group">
+            <label for="newPassword">新密码:</label>
+            <input type="password" class="form-control" id="newPassword" name="newPassword">
+          </div>
+          <div class="form-group">
+            <label for="confirmPassword">确认新密码:</label>
+            <input type="password" class="form-control" id="confirmPassword" name="confirmPassword">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+          <button type="submit" class="btn btn-primary">保存更改</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  function toggleQuantityInput(checkbox) {
+    const quantityInput = document.getElementById(`quantity_${checkbox.value}`);
+    if (checkbox.checked) {
+      quantityInput.style.display = 'inline';
+    } else {
+      quantityInput.style.display = 'none';
+    }
+  }
+</script>
+
 
 </body>
 </html>

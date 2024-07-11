@@ -17,4 +17,19 @@ public interface UserService {
      * @return 返回登录后的用户信息
      */
     User loginUser(String username, String password);
+
+    /**
+     * 修改用户密码
+     * @param userId 用户id
+     * @param newPassword 新密码
+     * @return
+     */
+    int updatePassword(int userId, String newPassword);
+
+    /**
+     * 修改用户信息
+     * @param user 用户信息
+     * @return 修改用户信息
+     */
+    int updateUser(User user);
 }

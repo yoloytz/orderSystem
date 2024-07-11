@@ -24,7 +24,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Dish {
-    private Long dishID;
+    private Long dishId;
     private Merchant merchant;
     private String dishName;
     private String description;

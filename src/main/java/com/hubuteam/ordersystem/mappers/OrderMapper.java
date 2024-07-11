@@ -2,8 +2,10 @@ package com.hubuteam.ordersystem.mappers;
 
 import com.hubuteam.ordersystem.pojo.Order;
 import com.hubuteam.ordersystem.pojo.OrderDetail;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
@@ -24,6 +26,13 @@ public interface OrderMapper {
     @Select("SELECT * FROM ordersys.orders WHERE UserID = #{userId}")
     List<Order> selectOrdersByUserId(int userId);
 
+    /**
+     * 根据订单id返回订单信息
+     * @param orderId 订单编号
+     * @return 订单信息
+     */
+    @Select("SELECT * FROM ordersys.orders WHERE OrderID = #{orderId}")
+    Order selectOrderById(int orderId);
 
     /**
      * 根据订单id返回订单详情
@@ -33,4 +42,19 @@ public interface OrderMapper {
     @Select("SELECT * FROM ordersys.orderdetails where OrderID = #{orderId}")
     List<OrderDetail> selectOrderDetailsByOrderId(int orderId);
 
+    /**
+     * 订单完成
+     * @param orderId 订单id
+     * @return 返回修改的行数 1 为成功 0 为失败
+     */
+    @Update("UPDATE ordersys.orders SET Status = 'rated' WHERE OrderID = #{orderId}")
+    int updateStatusCompleted(int orderId);
+
+    /**
+     * 删除订单
+     * @param orderId 订单编号
+     * @return 删除订单成功返回1 删除订单失败返回0
+     */
+    @Delete("DELETE FROM ordersys.orders WHERE OrderID = #{orderId}")
+    int deleteOrder(int orderId);
 }
