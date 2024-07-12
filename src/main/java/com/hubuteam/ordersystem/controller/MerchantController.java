@@ -13,8 +13,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -86,6 +89,68 @@ public class MerchantController {
         } else {
             return refreshView(model, merchant, "标记订单为完成失败！");
         }
+    }
+
+    @PostMapping("/updateDish")
+    public String updateDish(HttpSession session, @RequestParam("dishId") int dishId, @RequestParam("dishName") String dishName,
+                             @RequestParam("description") String description, @RequestParam("price") double price,
+                             @RequestParam("imageUrl") MultipartFile imageUrl, Model model) {
+        Merchant merchant = (Merchant) session.getAttribute("merchant");
+        if (merchant == null) {
+            return "redirect:/merchantLogin";
+        }
+        String imageUrlPath = null;
+        if (!imageUrl.isEmpty()) {
+            // 上传图片到指定路径，并获取图片URL
+            String fileName = imageUrl.getOriginalFilename();
+            String uploadDir = "path/to/upload/dir";
+            File uploadFile = new File(uploadDir, fileName);
+            try {
+                imageUrl.transferTo(uploadFile);
+                imageUrlPath = "/images/" + fileName;
+            } catch (IOException e) {
+                e.printStackTrace();
+                return refreshView(model, merchant, "上传图片失败！");
+            }
+        }
+//        int n = dishService.updateDish(dishId, dishName, description, price, imageUrlPath);
+//        if (n == 1) {
+//            return refreshView(model, merchant, "菜品信息更新成功！");
+//        } else {
+//            return refreshView(model, merchant, "菜品信息更新失败！");
+//        }
+        return null;
+    }
+
+    @PostMapping("/uploadDish")
+    public String uploadDish(HttpSession session, @RequestParam("dishName") String dishName,
+                             @RequestParam("description") String description, @RequestParam("price") double price,
+                             @RequestParam("imageUrl") MultipartFile imageUrl, Model model) {
+        Merchant merchant = (Merchant) session.getAttribute("merchant");
+        if (merchant == null) {
+            return "redirect:/merchantLogin";
+        }
+        String imageUrlPath = null;
+        if (!imageUrl.isEmpty()) {
+            // 上传图片到指定路径，并获取图片URL
+            String fileName = imageUrl.getOriginalFilename();
+            String uploadDir = "path/to/upload/dir";
+            File uploadFile = new File(uploadDir, fileName);
+            try {
+                imageUrl.transferTo(uploadFile);
+                imageUrlPath = "/images/" + fileName;
+            } catch (IOException e) {
+                e.printStackTrace();
+                return refreshView(model, merchant, "上传图片失败！");
+            }
+        }
+//        int n = dishService.addDish(dishName, description, price, imageUrlPath);
+//        if (n == 1) {
+//            return refreshView(model, merchant, "菜品上传成功！");
+//        } else {
+//            return refreshView(model, merchant, "菜品上传失败！");
+//        }
+        return null;
     }
 
     private String refreshView(Model model, Merchant merchant, String msg) {
