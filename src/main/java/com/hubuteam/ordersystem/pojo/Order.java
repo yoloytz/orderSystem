@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.*;
 import java.util.List;
 
 /**
@@ -21,6 +22,7 @@ import java.util.List;
  * Review：订单评价，外键，关联到评价表。
  * OrderDetails：订单详情，外键，关联到订单详情表。
  */
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

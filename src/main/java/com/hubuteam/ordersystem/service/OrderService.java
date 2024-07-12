@@ -62,4 +62,19 @@ public interface OrderService {
      * @return 订单是否删除成功
      */
     int deleteOrderById(int orderId);
+
+
+    /**
+     * 保存订单
+     * @param order 保存订单
+     * @return 成功返回订单id 失败返回-1
+     */
+    int saveOrder(Order order);
+
+
+    /**
+     * 保存订单详情
+     * @param orderDetails 保存订单详情
+     */
+    void saveOrderDetails(List<OrderDetail> orderDetails);
 }

@@ -3,6 +3,8 @@ package com.hubuteam.ordersystem.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.http.HttpSession;
+
 /**
  * @author 云天泽 Steven
  * @version 1.0
@@ -17,7 +19,12 @@ public class ViewController {
      * @return 返回应用首页
      */
     @RequestMapping("/")
-    public String test(){
+    public String test(HttpSession session){
+        try {
+            session.removeAttribute("user");
+        } catch (Exception e) {
+            System.err.println("Error remove user session");
+        }
         return "index";
     }
 

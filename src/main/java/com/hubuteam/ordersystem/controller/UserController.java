@@ -1,8 +1,6 @@
 package com.hubuteam.ordersystem.controller;
 
-import com.hubuteam.ordersystem.pojo.Order;
-import com.hubuteam.ordersystem.pojo.Review;
-import com.hubuteam.ordersystem.pojo.User;
+import com.hubuteam.ordersystem.pojo.*;
 import com.hubuteam.ordersystem.service.DishService;
 import com.hubuteam.ordersystem.service.Impl.UserServiceImpl;
 import com.hubuteam.ordersystem.service.OrderService;
@@ -14,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -64,8 +63,13 @@ public class UserController {
         review.setUser(user);
         review.setRating(rating);
         review.setComment(comment);
-        orderService.saveReview(review);
-        return refreshView(model, user,"评论提交成功！");
+        int n = orderService.saveReview(review);
+        if(n == 1){
+            return refreshView(model, user,"评论提交成功！");
+        }else{
+            return refreshView(model, user,"评论提交失败！");
+        }
+
     }
 
     @PostMapping("/deleteOrder")
@@ -75,9 +79,14 @@ public class UserController {
             return "redirect:/login";
         }
         // 调用服务层方法删除订单
-        orderService.deleteOrderById(orderId);
+        int n = orderService.deleteOrderById(orderId);
+        if(n == 1){
+            return refreshView(model, user,"删除订单成功！");
+        }else{
+            return refreshView(model, user,"删除订单失败！不可抗力影响");
+        }
         // 刷新视图
-        return refreshView(model, user,"删除订单成功！");
+
     }
 
     @PostMapping("/updateUser")
@@ -118,6 +127,43 @@ public class UserController {
             return refreshView(model, user,"旧密码错误");
         }
 
+    }
+
+
+    @PostMapping("/order")
+    public String placeOrder(HttpSession session, Model model, @RequestParam("dishIds") List<Integer> dishIds, @RequestParam("quantities") List<Integer> quantities) {
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            return "redirect:/login";
+        }
+        List<OrderDetail> orderDetails = new ArrayList<>();
+        quantities.removeIf(n -> n == 0);
+        for (int i = 0; i < dishIds.size(); i++) {
+            int dishId = dishIds.get(i);
+            int quantity = quantities.get(i);
+            Dish dish = dishService.findDishById(dishId);
+            OrderDetail orderDetail = new OrderDetail();
+            orderDetail.setDishId(dishId);
+            orderDetail.setDish(dish);
+            orderDetail.setQuantity(quantity);
+            orderDetail.setPrice(dish.getPrice());
+            orderDetails.add(orderDetail);
+        }
+
+        Order order = new Order();
+        order.setUser(user);
+        order.setMerchant(orderDetails.get(0).getDish().getMerchant());
+        order.setOrderDetails(orderDetails);
+        order.setStatus(OrderStatus.placed);
+        order.setTotalPrice(orderDetails.stream().mapToDouble(od -> od.getPrice() * od.getQuantity()).sum());
+        int orderId = orderService.saveOrder(order);
+        System.out.println("order :" + order);
+        for (OrderDetail detail : orderDetails) {
+            detail.setOrderId(orderId);
+        }
+        System.out.println("orderDetails :" + orderDetails);
+        orderService.saveOrderDetails(orderDetails);
+        return refreshView(model, user,"下单成功！");
     }
 
 

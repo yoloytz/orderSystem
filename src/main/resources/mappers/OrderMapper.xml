@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.hubuteam.ordersystem.mappers.OrderMapper">
+    <insert id="saveOrder" useGeneratedKeys="true" keyProperty="orderId" parameterType="com.hubuteam.ordersystem.pojo.Order">
+        INSERT INTO ordersys.orders(UserID, MerchantID, Status, TotalPrice) VALUES (#{m_order.user.userID},#{m_order.merchant.merchantId},#{m_order.status},#{m_order.totalPrice})
+    </insert>
+    <insert id="saveOrderDetail">
+        INSERT INTO ordersys.orderdetails(OrderID, DishID, Price, Quantity) VALUES (#{m_orderDetail.orderId},#{m_orderDetail.dishId},#{m_orderDetail.price},#{m_orderDetail.quantity})
+    </insert>
 </mapper>

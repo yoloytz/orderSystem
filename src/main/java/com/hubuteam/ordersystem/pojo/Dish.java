@@ -25,6 +25,7 @@ import java.util.List;
 @AllArgsConstructor
 public class Dish {
     private Long dishId;
+    private int merchantId;
     private Merchant merchant;
     private String dishName;
     private String description;

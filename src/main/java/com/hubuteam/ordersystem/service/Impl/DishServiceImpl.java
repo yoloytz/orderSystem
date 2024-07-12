@@ -1,7 +1,9 @@
 package com.hubuteam.ordersystem.service.Impl;
 
 import com.hubuteam.ordersystem.mappers.DishMapper;
+import com.hubuteam.ordersystem.mappers.MerchantMapper;
 import com.hubuteam.ordersystem.pojo.Dish;
+import com.hubuteam.ordersystem.pojo.Merchant;
 import com.hubuteam.ordersystem.service.DishService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,6 +22,8 @@ public class DishServiceImpl implements DishService {
 
     @Autowired
     private DishMapper dishMapper;
+    @Autowired
+    private MerchantMapper merchantMapper;
     /**
      * 查询所有菜品
      * @return List<Dish>
@@ -37,6 +41,8 @@ public class DishServiceImpl implements DishService {
      */
     @Override
     public Dish findDishById(int dishId) {
-        return dishMapper.findDishById(dishId);
+        Dish newDish = dishMapper.findDishById(dishId);
+        newDish.setMerchant(merchantMapper.selectMerchantById(newDish.getMerchantId()));
+        return newDish;
     }
 }

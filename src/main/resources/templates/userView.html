@@ -33,17 +33,13 @@
         <button class="btn btn-info" data-toggle="modal" data-target="#updateUserModal">更改信息</button>
         <button class="btn btn-warning" data-toggle="modal" data-target="#updatePasswordModal">修改密码</button>
       </div>
-
       <div class="row" style="margin-top: 20px;">
         <a th:href="@{/}">退出登录</a>
       </div>
-
-<!--      <button class="btn btn-info" th:onclick="location.href = '@{/updateUser}'">更改用户信息</button>-->
     </div>
-
     <div class="col-md-7 col-md-offset-1">
       <h3>餐厅菜单</h3>
-      <form th:action="@{/User/order}" method="post">
+      <form id = "orderForm" th:action="@{/User/order}" method="post">
         <table class="table table-striped">
           <thead>
           <tr>
@@ -57,23 +53,14 @@
           </thead>
           <tbody>
           <tr th:each="dish : ${dishes}">
-<!--            <td>-->
-<!--              <input type="checkbox" th:value="${dish.dishId}" th:id="'dish_' + ${dish.dishId}" name="dishIds" onchange="toggleQuantityInput(${dish.dishId})">-->
-<!--            </td>-->
-
             <td>
               <input type="checkbox" th:value="${dish.dishId}" th:id="|dish_${dish.dishId}|" name="dishIds" onclick="toggleQuantityInput(this)">
             </td>
-
             <td th:text="${dish.dishName}"></td>
             <td th:text="${dish.description}"></td>
             <td th:text="${dish.price} + '元'"></td>
-<!--            <td>-->
-<!--              <input type="number" th:id="'quantity_' + ${dish.dishId}" name="quantities" min="1" value="1" style="width: 60px; display: inline;">-->
-<!--            </td>-->
-
             <td>
-              <input type="number" th:id="|quantity_${dish.dishId}|" name="quantities" min="1" value="1" style="width: 60px; display: none;">
+              <input type="number" th:id="|quantity_${dish.dishId}|" name="quantities" min="0" value="0" style="width: 60px; display: none;">
             </td>
             <td>
               <img th:src="${dish.imageUrl}" alt="Dish Image" class="img-thumbnail" style="width: 100px; height: 100px;">
@@ -81,7 +68,8 @@
           </tr>
           </tbody>
         </table>
-        <button class="btn btn-success text-right" type="submit" style="float: right">立即下单</button>
+<!--        <button class="btn btn-success text-right" type="submit" style="float: right">立即下单</button>-->
+        <button type="button" class="btn btn-success text-right" style="float: right" data-toggle="modal" data-target="#confirmOrderModal">立即下单</button>
       </form>
     </div>
   </div>
@@ -336,15 +324,90 @@
   </div>
 </div>
 
+
+<div class="modal fade" id="confirmOrderModal" tabindex="-1" role="dialog" aria-labelledby="confirmOrderLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="confirmOrderLabel">确认下单</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>您选择的订单信息如下：</p>
+        <table class="table table-striped">
+          <thead>
+          <tr>
+            <th>菜品名称</th>
+            <th>备注</th>
+            <th>价格</th>
+            <th>数量</th>
+          </tr>
+          </thead>
+          <tbody id="orderSummary">
+          <!-- 动态填充订单信息 -->
+          </tbody>
+        </table>
+        <p>确认下单？</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+        <button type="button" class="btn btn-primary" onclick="submitOrder()">确认</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
 <script>
   function toggleQuantityInput(checkbox) {
     const quantityInput = document.getElementById(`quantity_${checkbox.value}`);
     if (checkbox.checked) {
       quantityInput.style.display = 'inline';
+      if (quantityInput.value === '0') {
+        quantityInput.value = 1;
+      }
     } else {
       quantityInput.style.display = 'none';
     }
   }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('confirmOrderModal').addEventListener('show.bs.modal', function () {
+      var orderSummary = document.getElementById('orderSummary');
+      orderSummary.innerHTML = ''; // 清空之前的订单信息
+      console.log('Modal is shown. Order summary cleared.');
+
+      var form = document.getElementById('orderForm');
+      var selectedDishes = form.querySelectorAll('input[type="checkbox"]:checked');
+      console.log('Selected dishes:', selectedDishes);
+
+      selectedDishes.forEach(function (checkbox) {
+        var row = checkbox.closest('tr');
+        var dishName = row.querySelector('td:nth-child(2)').innerText;
+        var description = row.querySelector('td:nth-child(3)').innerText;
+        var price = row.querySelector('td:nth-child(4)').innerText;
+        var quantity = row.querySelector('input[type="number"]').value;
+
+        console.log('Dish Name:', dishName, 'Description:', description, 'Price:', price, 'Quantity:', quantity);
+
+        var newRow = document.createElement('tr');
+        newRow.innerHTML = '<td>' + dishName + '</td><td>' + description + '</td><td>' + price + '</td><td>' + quantity + '</td>';
+        orderSummary.appendChild(newRow);
+      });
+    });
+  });
+
+
+  function submitOrder() {
+    var form = document.getElementById('orderForm');
+    console.log('Submitting order form:', form);
+    form.submit();
+    alert('下单成功！坐等开吃吧！');
+  }
+
 </script>
 
 

@@ -2,10 +2,8 @@ package com.hubuteam.ordersystem.mappers;
 
 import com.hubuteam.ordersystem.pojo.Order;
 import com.hubuteam.ordersystem.pojo.OrderDetail;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -57,4 +55,19 @@ public interface OrderMapper {
      */
     @Delete("DELETE FROM ordersys.orders WHERE OrderID = #{orderId}")
     int deleteOrder(int orderId);
+
+
+    /**
+     * 保存订单
+     * @param order 订单信息
+     * @return 成功返回1 失败返回0
+     */
+    int saveOrder(@Param("m_order") Order order);
+
+    /**
+     * 保存订单详情
+     * @param orderDetail 订单详情
+     * @return 成功返回1 失败返回0
+     */
+    int saveOrderDetail(@Param("m_orderDetail") OrderDetail orderDetail);
 }

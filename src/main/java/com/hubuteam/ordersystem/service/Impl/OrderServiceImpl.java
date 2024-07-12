@@ -1,5 +1,6 @@
 package com.hubuteam.ordersystem.service.Impl;
 
+
 import com.hubuteam.ordersystem.mappers.OrderMapper;
 import com.hubuteam.ordersystem.mappers.ReviewMapper;
 import com.hubuteam.ordersystem.pojo.Dish;
@@ -28,6 +29,7 @@ public class OrderServiceImpl implements OrderService {
     private DishService dishService;
     @Autowired
     private ReviewMapper reviewMapper;
+
     /**
      * 根据用户id查询订单
      * @param userId 用户id
@@ -102,5 +104,21 @@ public class OrderServiceImpl implements OrderService {
         return orderMapper.deleteOrder(orderId);
     }
 
+    @Override
+    public int saveOrder(Order order) {
+        int index = orderMapper.saveOrder(order);
+        if(index > 0){
+            return order.getOrderId();
+        }else {
+            return -1;
+        }
+    }
+
+    @Override
+    public void saveOrderDetails(List<OrderDetail> orderDetails) {
+        for(OrderDetail detail : orderDetails){
+            orderMapper.saveOrderDetail(detail);
+        }
+    }
 
 }
