@@ -57,6 +57,20 @@ public interface OrderService {
     int updateStatusCompleted(int orderId);
 
     /**
+     * 更新订单状态
+     * @param orderId 订单id
+     * @return 订单状态是否成功
+     */
+    int updateStatusTaken(int orderId);
+
+    /**
+     * 更新订单状态
+     * @param orderId 订单id
+     * @return 订单状态是否成功
+     */
+    int updateStatusDelivery(int orderId);
+
+    /**
      * 根据订单id删除订单
      * @param orderId 订单id
      * @return 订单是否删除成功

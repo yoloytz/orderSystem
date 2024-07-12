@@ -22,4 +22,13 @@ public interface MerchantMapper {
      */
     @Select("SELECT * FROM ordersys.merchants WHERE MerchantID = #{merchantId}")
     Merchant selectMerchantById(@Param("merchantId") int merchantId);
+
+    /**
+     * 根据商家名查询商家信息
+     * @param merchantName 商家名
+     * @return 商家信息
+     */
+    @Select("SELECT * FROM ordersys.merchants WHERE MerchantName = #{m_merchantName}")
+    Merchant selectMerchantByUsername(@Param("m_merchantName") String merchantName);
+
 }

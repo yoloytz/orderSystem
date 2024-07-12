@@ -1,10 +1,7 @@
 package com.hubuteam.ordersystem.mappers;
 
 import com.hubuteam.ordersystem.pojo.User;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 
 /**
  * @author 云天泽 Steven
@@ -39,4 +36,12 @@ public interface UserMapper {
      */
     @Update("UPDATE ordersys.users SET Password = #{newPassword} WHERE UserID = #{userId}")
     int updateUserPassword(@Param("userId") int userId, @Param("newPassword") String newPassword);
+
+    /**
+     * 注册用户
+     * @param user 用户信息
+     * @return 成功返回1 失败返回0
+     */
+    @Insert("INSERT INTO ordersys.users(Username, Password, Phone, Address) VALUES(#{m_user.username}, #{m_user.password}, #{m_user.phone}, #{m_user.address})")
+    int insertUser(@Param("m_user") User user);
 }

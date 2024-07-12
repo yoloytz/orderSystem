@@ -45,8 +45,24 @@ public interface OrderMapper {
      * @param orderId 订单id
      * @return 返回修改的行数 1 为成功 0 为失败
      */
-    @Update("UPDATE ordersys.orders SET Status = 'rated' WHERE OrderID = #{orderId}")
+    @Update("UPDATE ordersys.orders SET Status = 'completed' WHERE OrderID = #{orderId}")
     int updateStatusCompleted(int orderId);
+
+    /**
+     * 修改订单为已接单
+     * @param orderId 订单信息
+     * @return 成功返回1 失败返回0
+     */
+    @Update("UPDATE ordersys.orders SET Status = 'taken' WHERE OrderID = #{orderId}")
+    int updateStatusTaken(int orderId);
+
+    /**
+     * 修改订单为配送中
+     * @param orderId 订单信息
+     * @return 成功返回1 失败返回0
+     */
+    @Update("UPDATE ordersys.orders SET Status = 'delivery' WHERE OrderID = #{orderId}")
+    int updateStatusDelivery(int orderId);
 
     /**
      * 删除订单
@@ -78,4 +94,13 @@ public interface OrderMapper {
      * @return 成功返回1 失败返回0
      */
     int saveOrderDetail(@Param("m_orderDetail") OrderDetail orderDetail);
+
+
+    /**
+     * 根据商家id查询订单
+     * @param merchantId 商家号
+     * @return 所有订单信息
+     */
+    @Select("SELECT * FROM ordersys.orders WHERE MerchantID = #{merchantId}")
+    List<Order> selectAllOrdersByMerchantId(@Param("merchantId") int merchantId);
 }

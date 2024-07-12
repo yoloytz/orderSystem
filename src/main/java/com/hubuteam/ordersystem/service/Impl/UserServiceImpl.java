@@ -39,11 +39,10 @@ public class UserServiceImpl implements UserService {
      *
      * @param userId      用户id
      * @param newPassword 新密码
-     * @return
+     * @return 修改用户密码 成功返回1 失败返回0
      */
     @Override
     public int updatePassword(int userId, String newPassword) {
-        System.out.println("用户信息打印测试1" + userId + newPassword);
         return userMapper.updateUserPassword(userId, newPassword);
     }
 
@@ -57,5 +56,15 @@ public class UserServiceImpl implements UserService {
     public int updateUser(User user) {
         System.out.println("用户信息打印测试2" + user);
         return userMapper.updateUserInfo(user);
+    }
+
+    @Override
+    public int rigUser(User user) {
+        if(userMapper.findByUsername(user.getUsername()) == null){
+            return userMapper.insertUser(user);
+        }else {
+            return -1;
+        }
+
     }
 }

@@ -99,6 +99,28 @@ public class OrderServiceImpl implements OrderService {
         return orderMapper.updateStatusCompleted(orderId);
     }
 
+    /**
+     * 更新订单状态
+     *
+     * @param orderId 订单id
+     * @return 订单状态是否成功
+     */
+    @Override
+    public int updateStatusTaken(int orderId) {
+        return orderMapper.updateStatusTaken(orderId);
+    }
+
+    /**
+     * 更新订单状态
+     *
+     * @param orderId 订单id
+     * @return 订单状态是否成功
+     */
+    @Override
+    public int updateStatusDelivery(int orderId) {
+        return orderMapper.updateStatusDelivery(orderId);
+    }
+
     @Override
     public int deleteOrderById(int orderId) {
         return orderMapper.deleteOrder(orderId);

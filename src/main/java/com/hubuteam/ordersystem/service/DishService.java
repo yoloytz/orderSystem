@@ -14,7 +14,7 @@ import java.util.List;
 public interface DishService {
     /**
      * 查询所有菜品
-     * @return List<Dish>
+     * @return 所有菜品信息
      */
     List<Dish> findAllDishs();
 

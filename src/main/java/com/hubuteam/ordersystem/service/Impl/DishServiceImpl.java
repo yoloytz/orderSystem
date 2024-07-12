@@ -26,7 +26,7 @@ public class DishServiceImpl implements DishService {
     private MerchantMapper merchantMapper;
     /**
      * 查询所有菜品
-     * @return List<Dish>
+     * @return 所有餐品信息
      */
     @Override
     public List<Dish> findAllDishs() {

@@ -33,5 +33,14 @@ public class ViewController {
         return "index";
     }
 
+    @RequestMapping("/userRigView")
+    public String userRigView() {
+        return "userRigView";
+    }
+
+    @RequestMapping("/merchantLogin")
+    public String merchantLogin() {
+        return "merchantLogin";
+    }
 
 }

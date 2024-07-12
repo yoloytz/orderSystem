@@ -64,6 +64,7 @@ public class UserController {
         review.setRating(rating);
         review.setComment(comment);
         int n = orderService.saveReview(review);
+        orderService.updateStatusCompleted(orderId);
         if(n == 1){
             return refreshView(model, user,"评论提交成功！");
         }else{
@@ -87,9 +88,7 @@ public class UserController {
             return refreshView(model, user,"删除订单失败！不可抗力影响");
         }
         // 刷新视图
-
     }
-
     @PostMapping("/updateUser")
     public String updateUser(HttpSession session, Model model,
                              @RequestParam("username") String username,
@@ -167,6 +166,28 @@ public class UserController {
         return refreshView(model, user,"下单成功！");
     }
 
+    @RequestMapping(value = "/register", method = RequestMethod.POST)
+    public String register(HttpSession session, Model model, String username, String password, String phone, String address) {
+        // 处理用户注册逻辑
+        User newUser = new User();
+        newUser.setUsername(username);
+        newUser.setPassword(password);
+        newUser.setPhone(phone);
+        newUser.setAddress(address);
+        System.out.println(newUser);
+        int n = userService.rigUser(newUser);
+        if(n == 1){
+            model.addAttribute("msg","注册成功！请重新登陆！");
+            return "error";
+        }else if(n == -1){
+            model.addAttribute("msg","用户名已存在！");
+            return "error";
+        }else {
+            model.addAttribute("msg", "注册失败，请重试。");
+            return "error";
+        }
+    }
+
 
     private String refreshView(Model model, User user,String msg) {
         model.addAttribute("dishes", dishService.findAllDishs());
@@ -179,6 +200,5 @@ public class UserController {
         model.addAttribute("msg",msg);
         return "userView";
     }
-
 
 }

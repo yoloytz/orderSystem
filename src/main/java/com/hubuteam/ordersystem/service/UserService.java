@@ -22,7 +22,7 @@ public interface UserService {
      * 修改用户密码
      * @param userId 用户id
      * @param newPassword 新密码
-     * @return
+     * @return 修改成功返回1 否则返回0
      */
     int updatePassword(int userId, String newPassword);
 
@@ -32,4 +32,11 @@ public interface UserService {
      * @return 修改用户信息
      */
     int updateUser(User user);
+
+    /**
+     * 注册用户
+     * @param user 用户信息
+     * @return 注册成功返回1 否则返回0
+     */
+    int rigUser(User user);
 }
