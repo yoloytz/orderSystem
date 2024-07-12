@@ -78,6 +78,7 @@ public class UserController {
         if (user == null) {
             return "redirect:/login";
         }
+        int j = orderService.deleteOrderDetailsByOrderId(orderId);
         // 调用服务层方法删除订单
         int n = orderService.deleteOrderById(orderId);
         if(n == 1){

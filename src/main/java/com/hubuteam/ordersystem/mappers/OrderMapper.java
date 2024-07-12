@@ -58,6 +58,14 @@ public interface OrderMapper {
 
 
     /**
+     *  删除订单详情
+     * @param orderId 父订单Id
+     * @return 删除成功的子订单数量
+     */
+    @Delete("DELETE FROM ordersys.orderdetails WHERE OrderID = #{orderId}")
+    int deleteOrderDetailsByOrderId(int orderId);
+
+    /**
      * 保存订单
      * @param order 订单信息
      * @return 成功返回1 失败返回0

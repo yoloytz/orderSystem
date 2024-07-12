@@ -358,6 +358,35 @@
     </div>
   </div>
 </div>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    $('#confirmOrderModal').on('show.bs.modal', function () {
+      var orderSummary = document.getElementById('orderSummary');
+      orderSummary.innerHTML = ''; // 清空之前的订单信息
+      var form = document.getElementById('orderForm');
+      var selectedDishes = form.querySelectorAll('input[type="checkbox"]:checked');
+      selectedDishes.forEach(function (checkbox) {
+        var row = checkbox.closest('tr');
+        var dishName = row.querySelector('td:nth-child(2)').innerText;
+        var description = row.querySelector('td:nth-child(3)').innerText;
+        var price = row.querySelector('td:nth-child(4)').innerText;
+        var quantity = row.querySelector('input[type="number"]').value;
+        var newRow = document.createElement('tr');
+        newRow.innerHTML = '<td>' + dishName + '</td><td>' + description + '</td><td>' + price + '</td><td>' + quantity + '</td>';
+        orderSummary.appendChild(newRow);
+      });
+    });
+  });
+
+
+  function submitOrder() {
+    var form = document.getElementById('orderForm');
+    console.log('Submitting order form:', form);
+    form.submit();
+    alert('下单成功！坐等开吃吧！');
+  }
+
+</script>
 
 
 
@@ -374,39 +403,8 @@
     }
   }
 
-  document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('confirmOrderModal').addEventListener('show.bs.modal', function () {
-      var orderSummary = document.getElementById('orderSummary');
-      orderSummary.innerHTML = ''; // 清空之前的订单信息
-      console.log('Modal is shown. Order summary cleared.');
-
-      var form = document.getElementById('orderForm');
-      var selectedDishes = form.querySelectorAll('input[type="checkbox"]:checked');
-      console.log('Selected dishes:', selectedDishes);
-
-      selectedDishes.forEach(function (checkbox) {
-        var row = checkbox.closest('tr');
-        var dishName = row.querySelector('td:nth-child(2)').innerText;
-        var description = row.querySelector('td:nth-child(3)').innerText;
-        var price = row.querySelector('td:nth-child(4)').innerText;
-        var quantity = row.querySelector('input[type="number"]').value;
-
-        console.log('Dish Name:', dishName, 'Description:', description, 'Price:', price, 'Quantity:', quantity);
-
-        var newRow = document.createElement('tr');
-        newRow.innerHTML = '<td>' + dishName + '</td><td>' + description + '</td><td>' + price + '</td><td>' + quantity + '</td>';
-        orderSummary.appendChild(newRow);
-      });
-    });
-  });
 
 
-  function submitOrder() {
-    var form = document.getElementById('orderForm');
-    console.log('Submitting order form:', form);
-    form.submit();
-    alert('下单成功！坐等开吃吧！');
-  }
 
 </script>
 

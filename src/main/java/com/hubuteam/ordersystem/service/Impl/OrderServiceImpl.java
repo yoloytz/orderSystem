@@ -121,4 +121,9 @@ public class OrderServiceImpl implements OrderService {
         }
     }
 
+    @Override
+    public int deleteOrderDetailsByOrderId(int orderId) {
+        return orderMapper.deleteOrderDetailsByOrderId(orderId);
+    }
+
 }

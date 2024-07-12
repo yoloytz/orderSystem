@@ -77,4 +77,12 @@ public interface OrderService {
      * @param orderDetails 保存订单详情
      */
     void saveOrderDetails(List<OrderDetail> orderDetails);
+
+
+    /**
+     * 根据订单id删除订单详情
+     * @param orderId 订单id
+     * @return 订单内菜品数量
+     */
+    int deleteOrderDetailsByOrderId(int orderId);
 }
