@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/css/animate.css}">
+    <link rel="stylesheet" th:href="@{/asserts/bootstrap-3.3.7-dist/css/bootstrap.css}">
+    <script th:src="@{/js/jquery-3.3.1.js}"></script>
+    <script th:src="@{/asserts/bootstrap-3.3.7-dist/js/bootstrap.js}"></script>
+    <title>管理员登录</title>
+  <style>
+    body {
+      background: url("/images/rootlog.jpg") no-repeat center center fixed;
+      background-size: cover;
+    }
+    .info-panel {
+      background-color: rgba(255, 255, 255, 0.7); /* 半透明白色背景 */
+      padding: 20px;
+      border-radius: 8px;
+    }
+    .container {
+      margin-top: 10%;
+    }
+  </style>
+</head>
+<body>
+<body>
+<div class="container">
+  <div class="info-panel">
+    <h2 class="text-center">管理员登录</h2>
+    <form th:action="@{/Root/login}" method="post" class="form-signin">
+      <div class="form-group">
+        <label for="username">用户名</label>
+        <input type="text" id="username" name="username" class="form-control" placeholder="用户名" required autofocus>
+      </div>
+      <div class="form-group">
+        <label for="password">密码</label>
+        <input type="password" id="password" name="password" class="form-control" placeholder="密码" required>
+      </div>
+      <button type="submit" class="btn btn-lg btn-primary btn-block">登录</button>
+    </form>
+    <br>
+    <a class="btn btn-default" href="/">返回</a>
+  </div>
+</div>
+</body>
+</body>
+</html>

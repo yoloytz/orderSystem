@@ -41,6 +41,16 @@ public class OrderServiceImpl implements OrderService {
     }
 
     /**
+     * 管理员获取所有订单
+     *
+     * @return 管理员获取所有订单的服务
+     */
+    @Override
+    public List<Order> getAllOrders() {
+        return orderMapper.selectAllOrders();
+    }
+
+    /**
      * 根据订单id查询订单详情
      *
      * @param orderId 订单id

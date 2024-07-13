@@ -43,4 +43,8 @@ public class ViewController {
         return "merchantLogin";
     }
 
+    @RequestMapping("/RootLogController")
+    public String RootLogController() {
+        return "RootLog";
+    }
 }

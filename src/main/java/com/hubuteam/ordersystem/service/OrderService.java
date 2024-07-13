@@ -22,6 +22,12 @@ public interface OrderService {
     List<Order> selectOrdersByUserIdService(int userId);
 
     /**
+     * 管理员获取所有订单
+     * @return 管理员获取所有订单的服务
+     */
+    List<Order> getAllOrders();
+
+    /**
      * 根据订单id查询订单详情
      * @param orderId 订单id
      * @return 订单详情

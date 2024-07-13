@@ -54,7 +54,6 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public int updateUser(User user) {
-        System.out.println("用户信息打印测试2" + user);
         return userMapper.updateUserInfo(user);
     }
 

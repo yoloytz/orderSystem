@@ -32,6 +32,13 @@ public interface OrderMapper {
     @Select("SELECT * FROM ordersys.orders WHERE OrderID = #{orderId}")
     Order selectOrderById(int orderId);
 
+
+    /**
+     * 管理员查询所有订单
+     * @return 所有订单
+     */
+    @Select("SELECT * FROM ordersys.orders")
+    List<Order> selectAllOrders();
     /**
      * 根据订单id返回订单详情
      * @param orderId 订单id

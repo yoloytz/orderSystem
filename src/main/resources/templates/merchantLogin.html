@@ -7,9 +7,27 @@
     <script th:src="@{/js/jquery-3.3.1.js}"></script>
     <script th:src="@{/asserts/bootstrap-3.3.7-dist/js/bootstrap.js}"></script>
     <title>商家登录</title>
+    <style>
+        body {
+            background: url("/images/MerchantLog.jpg") no-repeat center center fixed;
+            background-size: cover;
+        }
+        .info-panel {
+            background-color: rgba(255, 255, 255, 0.7); /* 半透明白色背景 */
+            padding: 20px;
+            border-radius: 8px;
+        }
+        .container {
+            margin-top: 10%;
+        }
+    </style>
+
 </head>
 <body>
 <div class="container">
+    <div class="info-panel">
+
+
     <h2 class="text-center">商家登录</h2>
     <form th:action="@{/Merchant/login}" method="post" class="form-signin">
         <div class="form-group">
@@ -24,7 +42,7 @@
     </form>
     <br>
     <a class="btn btn-default" href="/">返回</a>
+    </div>
 </div>
-</body>
 </body>
 </html>

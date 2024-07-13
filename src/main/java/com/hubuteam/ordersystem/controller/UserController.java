@@ -79,9 +79,14 @@ public class UserController {
         if (user == null) {
             return "redirect:/login";
         }
-        int j = orderService.deleteOrderDetailsByOrderId(orderId);
-        // 调用服务层方法删除订单
-        int n = orderService.deleteOrderById(orderId);
+        int n = 0;
+        try {
+            int j = orderService.deleteOrderDetailsByOrderId(orderId);
+            // 调用服务层方法删除订单
+            n = orderService.deleteOrderById(orderId);
+        } catch (Exception e) {
+            return refreshView(model, user,"删除订单失败！不可抗力影响");
+        }
         if(n == 1){
             return refreshView(model, user,"删除订单成功！");
         }else{
@@ -101,7 +106,6 @@ public class UserController {
         user.setUsername(username);
         user.setPhone(phone);
         user.setAddress(address);
-        System.out.println("用户信息打印测试1" + user);
         userService.updateUser(user);
 
         return refreshView(model, user,"修改信息成功");

@@ -3,6 +3,8 @@ package com.hubuteam.ordersystem.mappers;
 import com.hubuteam.ordersystem.pojo.User;
 import org.apache.ibatis.annotations.*;
 
+import java.util.List;
+
 /**
  * @author 云天泽 Steven
  * @version 1.0
@@ -20,6 +22,13 @@ public interface UserMapper {
     @Select("SELECT * FROM ordersys.users WHERE username = #{username}")
     User findByUsername(String username);
 
+
+    /**
+     * 查询所有用户的信息
+     * @return 所有用户信息
+     */
+    @Select("SELECT * FROM ordersys.users")
+    List<User> selectAllUsers();
 
     /**
      * 更新用户信息
