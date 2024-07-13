@@ -1,0 +1,6 @@
+com.hubuteam.ordersystem
+com.hubuteam.ordersystem.controller
+com.hubuteam.ordersystem.mappers
+com.hubuteam.ordersystem.pojo
+com.hubuteam.ordersystem.service
+com.hubuteam.ordersystem.service.Impl
