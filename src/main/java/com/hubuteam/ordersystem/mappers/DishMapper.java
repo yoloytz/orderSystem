@@ -1,8 +1,7 @@
 package com.hubuteam.ordersystem.mappers;
 
 import com.hubuteam.ordersystem.pojo.Dish;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -29,4 +28,27 @@ public interface DishMapper {
      */
     @Select("SELECT * FROM ordersys.dishes WHERE dishID = #{dishId}")
     Dish findDishById(int dishId);
+
+
+    /**
+     * 插入菜品
+     * @param dish 菜品信息
+     * @return 插入菜品成功返回1，否则返回0
+     */
+    int insertDish(@Param("dish") Dish dish);
+
+    /**
+     * 更新菜品
+     * @param dish 新菜品信息
+     * @return 更新菜品成功返回1，否则返回0
+     */
+    int updateDish(@Param("dish") Dish dish);
+
+    /**
+     * 删除菜品
+     * @param dishId 菜品信息
+     * @return 删除菜品成功返回1，否则返回0
+     */
+    @Delete("DELETE FROM ordersys.dishes WHERE DishID = #{dishId}")
+    int deleteDish(@Param("dishId") int dishId);
 }

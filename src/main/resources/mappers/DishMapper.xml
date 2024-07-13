@@ -1,4 +1,26 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.hubuteam.ordersystem.mappers.DishMapper">
+    <insert id="insertDish">
+        INSERT INTO ordersys.dishes (DishName, Description, Price, ImageURL, MerchantID)
+        VALUES (#{dish.dishName}, #{dish.description}, #{dish.price}, #{dish.imageUrl}, #{dish.merchantId})
+    </insert>
+    <update id="updateDish">
+        UPDATE ordersys.dishes
+        <set>
+            <if test="dish.dishName != null">
+                DishName = #{dish.dishName},
+            </if>
+            <if test="dish.description != null">
+                Description = #{dish.description},
+            </if>
+            <if test="dish.price != null">
+                Price = #{dish.price},
+            </if>
+            <if test="dish.imageUrl != null">
+                ImageURL =#{dish.imageUrl},
+            </if>
+        </set>
+        WHERE DishID = #{dish.dishId}
+    </update>
 </mapper>

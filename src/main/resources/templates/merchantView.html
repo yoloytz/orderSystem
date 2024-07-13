@@ -9,8 +9,9 @@
     <title>商家页面</title>
 </head>
 <body>
+
 <div class="container-fluid">
-    <h2 class="text-center">欢迎, <span th:text="${session.merchant.merchantName}">您好！处理订单吧！</span></h2>
+    <h2 class="text-center">欢迎, <span th:text="${session.merchant.merchantName}"></span> 您好！处理订单吧！</h2>
     <div class="row">
         <div class="col-md-2 col-md-offset-1">
             <div class="alert alert-warning">
@@ -43,10 +44,12 @@
                         <td th:text="${dish.description}"></td>
                         <td th:text="${dish.price} + '元'"></td>
                         <td>
+
                             <img th:src="${dish.imageUrl}" alt="Dish Image" class="img-thumbnail" style="width: 100px; height: 100px;">
                         </td>
                         <td>
                             <button class="btn btn-primary" data-toggle="modal" th:data-target="'#editDishModal' + ${dish.dishId}">修改信息</button>
+                            <button class="btn btn-danger" data-toggle="modal" th:data-target="'#DeleteDishModal' + ${dish.dishId}">下架菜品</button>
                         </td>
                     </tr>
                     </tbody>
@@ -55,42 +58,7 @@
 <!--            </form>-->
             <button type="button" class="btn btn-success text-right" style="float: right" data-toggle="modal" data-target="#uploadDishModal">上传菜品</button>
 
-            <div th:each="dish : ${dishes}">
-                <div class="modal fade" th:id="'editDishModal' + ${dish.dishId}" tabindex="-1" role="dialog" aria-labelledby="editDishModalLabel" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" th:text="'修改菜品信息 - ' + ${dish.dishName}"></h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <form th:action="@{/Merchant/updateDish}" method="post" enctype="multipart/form-data">
-                                    <input type="hidden" th:value="${dish.dishId}" name="dishId">
-                                    <div class="form-group">
-                                        <label for="dishName">菜品名称</label>
-                                        <input type="text" class="form-control" id="dishName" name="dishName" th:value="${dish.dishName}" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="description">备注</label>
-                                        <input type="text" class="form-control" id="description" name="description" th:value="${dish.description}" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="price">价格</label>
-                                        <input type="number" class="form-control" id="price" name="price" th:value="${dish.price}" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="imageUrl">图片</label>
-                                        <input type="file" class="form-control-file" id="imageUrl" name="imageUrl">
-                                    </div>
-                                    <button type="submit" class="btn btn-primary">保存修改</button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-        </div>
+
     </div>
 
 </div>
@@ -156,7 +124,80 @@
     </div>
 </div>
 
+<!--修改信息模态框-->
+<div th:each="dish : ${dishes}">
+    <div class="modal fade" th:id="'editDishModal' + ${dish.dishId}" tabindex="-1" role="dialog" aria-labelledby="editDishModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" th:text="'修改菜品信息 - ' + ${dish.dishName}"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form th:action="@{/Merchant/updateDish}" method="post" enctype="multipart/form-data">
+                        <input type="hidden" th:value="${dish.dishId}" name="dishId">
+                        <div class="form-group">
+                            <label for="dishName">菜品名称</label>
+                            <input type="text" class="form-control" id="dishName" name="dishName" th:value="${dish.dishName}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="description">备注</label>
+                            <input type="text" class="form-control" id="description" name="description" th:value="${dish.description}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="price">价格</label>
+                            <input type="number" class="form-control" id="price" name="price" th:value="${dish.price}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="imageUrl">图片</label>
+                            <input type="file" class="form-control-file" id="imageUrl" name="imageUrl">
+                        </div>
+                        <button type="submit" class="btn btn-primary">保存修改</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
+
+<div th:each="dish : ${dishes}">
+    <div class="modal fade" th:id="'DeleteDishModal' + ${dish.dishId}" tabindex="-1" role="dialog" aria-labelledby="editDishModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" th:text="'是否删除菜品信息菜品信息 - ' + ${dish.dishName}"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form th:action="@{/Merchant/deleteDish}" method="post" enctype="multipart/form-data">
+                        <input type="hidden" th:value="${dish.dishId}" name="dishId">
+                        <div class="form-group">
+                            <label for="dishName">菜品名称</label>
+                            <input type="text" class="form-control" id="deletedishName" name="dishName" th:value="${dish.dishName}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="description">备注</label>
+                            <input type="text" class="form-control" id="deletedescription" name="description" th:value="${dish.description}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="price">价格</label>
+                            <input type="number" class="form-control" id="deleteprice" name="price" th:value="${dish.price}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="imageUrl">图片</label>
+                            <input type="file" class="form-control-file" id="deleteimageUrl" name="imageUrl">
+                        </div>
+                        <button type="submit" class="btn btn-primary">确定删除</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- 订单详情模态框 -->
 <div th:each="order : ${orders}">
@@ -213,8 +254,9 @@
     </div>
 </div>
 
-<div th:each="order : ${orders}">
     <!-- 配送模态框 -->
+<div th:each="order : ${orders}">
+
     <div class="modal fade" th:id="'dilivery' + ${order.orderId}" tabindex="-1" role="dialog" aria-labelledby="diliveryModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -239,8 +281,9 @@
     </div>
 </div>
 
-<div th:each="order : ${orders}">
     <!-- 接单模态框 -->
+<div th:each="order : ${orders}">
+
     <div class="modal fade" th:id="'getorder' + ${order.orderId}" tabindex="-1" role="dialog" aria-labelledby="getOrderModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -265,8 +308,9 @@
     </div>
 </div>
 
-<div th:each="order : ${orders}">
     <!-- 订单完成模态框 -->
+<div th:each="order : ${orders}">
+
     <div class="modal fade" th:id="'filishorder' + ${order.orderId}" tabindex="-1" role="dialog" aria-labelledby="finishOrderModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -291,40 +335,42 @@
     </div>
 </div>
 
-    <!-- 上传菜品模态框 -->
-    <div class="modal fade" id="uploadDishModal" tabindex="-1" role="dialog" aria-labelledby="uploadDishModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="uploadDishModalLabel">上传菜品</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form th:action="@{/Merchant/uploadDish}" method="post" enctype="multipart/form-data">
-                        <div class="form-group">
-                            <label for="dishName">菜品名称</label>
-                            <input type="text" class="form-control" id="upDishName" name="dishName" placeholder="请输入菜品名称" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="description">备注</label>
-                            <input type="text" class="form-control" id="upDescription" name="description" placeholder="请输入备注" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="price">价格</label>
-                            <input type="number" class="form-control" id="upPrice" name="price" placeholder="请输入价格" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="imageUrl">图片</label>
-                            <input type="file" class="form-control-file" id="upImageUrl" name="imageUrl" required>
-                        </div>
-                        <button type="submit" class="btn btn-primary">上传菜品</button>
-                    </form>
-                </div>
+<!-- 上传菜品模态框 -->
+<div class="modal fade" id="uploadDishModal" tabindex="-1" role="dialog" aria-labelledby="uploadDishModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="uploadDishModalLabel">上传菜品</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form th:action="@{/Merchant/uploadDish}" method="post" enctype="multipart/form-data">
+                    <input type="hidden" th:value="${session.merchant.merchantId}" name = "merchantId">
+                    <div class="form-group">
+                        <label for="dishName">菜品名称</label>
+                        <input type="text" class="form-control" id="upDishName" name="dishName" placeholder="请输入菜品名称" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="description">备注</label>
+                        <input type="text" class="form-control" id="upDescription" name="description" placeholder="请输入备注" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="price">价格</label>
+                        <input type="number" class="form-control" id="upPrice" name="price" placeholder="请输入价格" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="imageUrl">图片</label>
+                        <input type="file" class="form-control-file" id="upImageUrl" name="imageUrl" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">上传菜品</button>
+                </form>
             </div>
         </div>
     </div>
+</div>
+
 
 
 </body>
